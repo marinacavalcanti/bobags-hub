@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bobags · Estratégia de Social</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== CONFIG DE LINKS: procure "const CONFIG" no <script> ===== */
+:root{
+  --ink:#1a1a1a; --paper:#f4f2ee; --card:#fbfaf8; --line:#e4dfd6;
+  --accent:#d6006e; --muted:#8c8578; --ink-soft:#4a453e;
+  /* cartelas pastel (tom fun das refs) */
+  --c-rosa:#f7d9e6; --c-lima:#e4ee9f; --c-lilas:#dcd6f2; --c-amarelo:#f6ecb0; --c-pessego:#f8dcc9;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;font-weight:400}
+a{color:inherit}
+img{display:block;max-width:100%}
+
+.nav{position:sticky;top:0;z-index:50;background:rgba(244,242,238,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:2px;padding:14px 26px;flex-wrap:wrap}
+.nav .logo{font-size:15px;font-weight:700;letter-spacing:.3px;margin-right:auto}
+.nav .logo .b{color:var(--accent)}
+.nav .logo small{display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:1px}
+.nav button{background:transparent;border:none;color:var(--muted);font-family:inherit;font-size:13.5px;font-weight:500;padding:8px 15px;border-radius:8px;cursor:pointer;transition:.15s}
+.nav button:hover{color:var(--ink);background:rgba(0,0,0,.04)}
+.nav button.active{color:var(--ink);font-weight:600}
+.nav button.active::after{content:"";display:block;height:3px;background:var(--accent);border-radius:3px;margin-top:5px}
+
+.view{display:none;animation:fade .3s}.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wrap{max-width:1000px;margin:0 auto;padding:44px 26px 72px}
+.wrap>p,.lead{max-width:64ch}
+
+/* seta de ação circular (das refs) */
+.arrow{width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex:none;transition:.15s;text-decoration:none}
+.arrow:hover{background:var(--accent);transform:rotate(-45deg)}
+.tagpill{display:inline-block;background:rgba(0,0,0,.06);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--ink-soft)}
+
+/* HERO */
+.hero{padding:64px 26px 20px;max-width:1000px;margin:0 auto}
+.hero .eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:16px}
+.hero h1{font-size:56px;font-weight:800;letter-spacing:-2px;line-height:.98;max-width:16ch}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .sub{margin-top:22px;font-size:18px;color:var(--ink-soft);font-weight:300;max-width:52ch}
+
+.goldrule{max-width:1000px;margin:32px auto 0;padding:0 26px}
+.goldrule .inner{background:var(--ink);color:#fff;border-radius:20px;padding:32px 38px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.goldrule .k{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px}
+.goldrule .q{font-size:23px;font-weight:400;line-height:1.35}.goldrule .q b{font-weight:600}
+
+.snum{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:10px}
+h2{font-size:38px;font-weight:800;letter-spacing:-1.2px;margin-bottom:10px}
+.lead{font-size:17px;color:var(--ink-soft);font-weight:300;margin-bottom:26px}
+h3{font-size:21px;font-weight:600;margin:30px 0 10px;letter-spacing:-.3px}
+p{font-size:15px;color:var(--ink-soft);margin-bottom:12px}
+.divider{height:1px;background:var(--line);margin:48px 0}
+
+/* fluxo home — cartelas coloridas com número grande */
+.flow-home{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:28px 0}
+.fh{border-radius:16px;padding:22px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
+.fh:nth-child(1){background:var(--c-rosa)}.fh:nth-child(2){background:var(--c-lima)}
+.fh:nth-child(3){background:var(--c-lilas)}.fh:nth-child(4){background:var(--c-amarelo)}
+.fh .n{font-size:30px;font-weight:800;letter-spacing:-1px}
+.fh h4{font-size:16px;font-weight:600;margin:6px 0 5px}
+.fh p{font-size:12.5px;color:var(--ink-soft);margin:0}
+
+.nav-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.nc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;cursor:pointer;transition:.18s;display:flex;flex-direction:column;justify-content:space-between;min-height:120px}
+.nc:hover{border-color:var(--ink);transform:translateY(-3px)}
+.nc h3{margin:0 0 4px;font-size:18px}.nc p{font-size:13px;color:var(--muted);margin:0 0 12px}
+
+/* FORMATOS — visual grande, cartela colorida por objetivo */
+.fmt{display:grid;grid-template-columns:200px 1fr;gap:24px;border-radius:20px;padding:22px;margin:18px 0;align-items:start}
+.fmt:nth-child(1){background:var(--c-lilas)}.fmt:nth-child(2){background:var(--c-rosa)}
+.fmt:nth-child(3){background:var(--c-lima)}.fmt:nth-child(4){background:var(--c-amarelo)}.fmt:nth-child(5){background:var(--c-pessego)}
+.fmt .thumb{border-radius:14px;overflow:hidden;aspect-ratio:4/5;background:#fff;position:relative;box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.fmt .thumb img{width:100%;height:100%;object-fit:contain}
+.fmt .thumb .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25);opacity:0;transition:.15s;color:#fff;font-weight:600}
+.fmt .thumb:hover .play{opacity:1}
+.fmt .info .tagline{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft);font-weight:600;opacity:.7}
+.fmt .info .htitle{display:flex;align-items:center;gap:12px;margin:4px 0 6px}
+.fmt .info h3{margin:0;font-size:28px;font-weight:800;letter-spacing:-.5px}
+.fmt .info .obj{background:rgba(0,0,0,.08);border-radius:20px;padding:3px 12px;font-size:11px;font-weight:600}
+.fmt .info .desc{font-size:14px;color:var(--ink-soft);margin-bottom:10px}
+.fmt .info .why{font-size:13px;color:var(--ink-soft);margin-bottom:10px;line-height:1.5}
+.fmt .info .why b{color:var(--ink)}
+.fmt .info .copy{font-size:13px;color:var(--ink);background:rgba(255,255,255,.55);border-radius:10px;padding:10px 14px;margin-bottom:12px;line-height:1.5}
+.fmt .info .foot{display:flex;align-items:center;gap:14px}
+.fmt .info .stat b{font-size:20px;font-weight:800}.fmt .info .stat span{font-size:12px;color:var(--ink-soft)}
+
+/* GUIA/PRODUÇÃO */
+.callout{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:14px;color:var(--ink-soft)}
+.callout b{color:var(--ink)}
+
+/* CALENDÁRIO VISUAL */
+.daybar{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}
+.daybtn{background:transparent;border:1.5px solid var(--line);border-radius:12px;padding:10px 16px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;color:var(--ink-soft)}
+.daybtn:hover{border-color:var(--ink)}
+.daybtn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.daypanel{display:none}.daypanel.active{display:block;animation:fade .2s}
+.daybtn .dbmk{display:inline-block;margin-left:6px;padding-left:8px;border-left:1px solid rgba(255,255,255,.35);font-size:11px;font-weight:600;opacity:.85}
+.daybtn:not(.active) .dbmk{border-left-color:var(--line);color:var(--accent)}
+.dtheme{margin-bottom:16px}
+.dtheme .dlabel{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:2px}
+.dtheme .tag{font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1.1;display:block}
+.connect-rule{background:var(--c-lima);border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--ink)}
+.connect-rule b{font-weight:700}
+.exbadge{position:absolute;top:8px;left:8px;z-index:2;background:rgba(0,0,0,.7);color:#fff;font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:6px}
+.pcard .thumb{position:relative}
+.mecpill{background:var(--accent);color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 10px;border-radius:20px}
+.pcard .thumb.noex{aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:13px;font-weight:600;background:#efeae2;gap:4px}
+.pcard .thumb.noex small{font-weight:400;font-size:11px}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pcard{border-radius:18px;overflow:hidden;background:var(--card);border:1px solid var(--line)}
+.pcard.m{background:var(--c-lilas)}
+.pcard.n{background:var(--c-rosa)}
+.pcard .head{padding:14px 18px 6px;display:flex;justify-content:space-between;align-items:center}
+.pcard .head .tt{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700}
+.pcard.n .head .tt{color:var(--accent)}
+.pcard .thumb{margin:0;overflow:hidden;background:#fff;display:block;position:relative;border-bottom:1px solid var(--line)}
+.pcard .thumb img{width:100%;height:auto;display:block}
+.pcard .bd{padding:12px 18px 18px}
+.pcard .fmtname{font-size:18px;font-weight:800;margin-bottom:3px;letter-spacing:-.3px}
+.pcard .fmtname small{display:block;font-weight:500;color:var(--ink-soft);font-size:12px;letter-spacing:0}
+.pcard .txt{font-size:13px;color:var(--ink-soft);margin:8px 0 12px}
+.pcard .connect{font-size:12px;color:var(--accent);font-weight:500;margin-bottom:12px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.act{font-size:12px;font-weight:600;padding:9px 15px;border-radius:10px;text-decoration:none;transition:.15s}
+.act.primary{background:var(--ink);color:#fff}.act.primary:hover{background:var(--accent)}
+.act.ghost{background:rgba(255,255,255,.6);color:var(--ink);border:1px solid rgba(0,0,0,.15)}.act.ghost:hover{background:#fff}
+.act.todo{background:transparent;border:1px dashed rgba(0,0,0,.2);color:var(--muted);cursor:default}
+
+.stories{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px}
+.stories .l{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:6px}
+.stories .sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+.srow{display:flex;flex-direction:column;gap:10px}
+.schip{background:var(--paper);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+.schip .stop{margin-bottom:10px}
+.schip .em{font-weight:700;font-size:13.5px;display:block}
+.schip .br{color:var(--ink-soft);font-size:12.5px;display:block;margin-top:2px}
+.slinks{display:flex;gap:10px;flex-wrap:wrap}
+.slink{display:flex;flex-direction:column;gap:2px;text-decoration:none;background:var(--ink);color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.14);transition:.15s;min-width:180px}
+.slink:hover{background:var(--accent);transform:translateY(-2px)}
+.slink .ll{font-weight:700;font-size:12.5px;display:flex;align-items:center;gap:6px}
+.slink .ll::before{content:"↗";opacity:.75}
+.slink .lh{font-size:11px;opacity:.8;font-weight:400;line-height:1.35}
+.slink.todo{background:transparent;color:var(--muted);border:1px dashed var(--line);cursor:default;box-shadow:none}
+.slink.todo .ll::before{content:"⏳"}
+
+/* ANÁLISE */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.statbig{border-radius:16px;padding:20px;text-align:center}
+.statbig:nth-child(1){background:var(--c-rosa)}.statbig:nth-child(2){background:var(--c-lima)}
+.statbig:nth-child(3){background:var(--c-lilas)}.statbig:nth-child(4){background:var(--c-amarelo)}
+.statbig .b{font-size:32px;font-weight:800;letter-spacing:-1px}
+.statbig .l{font-size:12px;color:var(--ink-soft);margin-top:4px}
+.analise-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:20px 0}
+.acard{border-radius:14px;overflow:hidden;text-decoration:none;transition:.15s;background:var(--card);border:1px solid var(--line)}
+.acard:hover{transform:translateY(-3px);border-color:var(--ink)}
+.acard img{aspect-ratio:4/5;object-fit:contain;width:100%;background:#fff}
+.acard .c{padding:10px 12px}.acard .c .t{font-size:11px;color:var(--muted)}.acard .c .v{font-size:16px;font-weight:700}
+.insight{display:flex;gap:16px;align-items:flex-start;border-radius:16px;padding:20px 22px;margin:12px 0}
+.insight:nth-of-type(odd){background:var(--card);border:1px solid var(--line)}
+.insight:nth-of-type(even){background:var(--card);border:1px solid var(--line)}
+.insight .ico{width:44px;height:44px;border-radius:12px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex:none}
+.insight h4{font-size:16px;font-weight:600;margin-bottom:4px}.insight p{font-size:13.5px;margin:0}
+
+.flow{counter-reset:s;margin:14px 0}
+.fstep{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.fstep:last-child{border:none}
+.fstep .n{counter-increment:s;min-width:26px;height:26px;background:var(--paper);border:1.5px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.fstep .n::before{content:counter(s)}.fstep.last .n{background:var(--accent);border-color:var(--accent);color:#fff}
+.fstep .tx{font-size:14px;color:var(--ink-soft)}.fstep .tx b{color:var(--ink)}
+
+.config-warn{background:#fdf6e3;border:1px solid #ece0b8;border-radius:10px;padding:12px 16px;margin:0 0 20px;font-size:13px;color:#7a6414}
+/* checklist */
+.wkbar{height:10px;background:var(--line);border-radius:10px;overflow:hidden;margin:8px 0 6px}
+.wkbar-fill{height:100%;width:0;background:var(--accent);border-radius:10px;transition:width .3s}
+.wkmeta{font-size:13px;color:var(--ink-soft);margin-bottom:24px}
+.wkmeta #wkpct{font-weight:700;color:var(--ink)}
+.wkreset{background:none;border:none;color:var(--accent);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;margin-left:8px}
+.ckday{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:14px}
+.ckday.done{border-color:var(--accent)}
+.ckday-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;cursor:pointer}
+.ckday-h .d{font-size:18px;font-weight:800}
+.ckday-h .th{font-size:12.5px;color:var(--muted);flex:1;margin-left:10px}
+.ckday-h .prog{font-size:11px;font-weight:700;color:var(--accent);white-space:nowrap}
+.ckday-body{margin-top:12px;display:none}
+.ckday.open .ckday-body{display:block}
+.ckslot{margin:10px 0}
+.ckslot .st{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:8px}
+.ckslot .st.n{color:var(--accent)}
+.cksteps{display:flex;gap:8px;flex-wrap:wrap}
+.ckstep{display:flex;align-items:center;gap:7px;background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer;font-size:12.5px;transition:.12s;user-select:none}
+.ckstep:hover{border-color:var(--ink)}
+.ckstep.checked{background:var(--accent);color:#fff;border-color:var(--accent)}
+.ckstep .box{width:15px;height:15px;border:1.5px solid currentColor;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:10px}
+.ckstep.checked .box::after{content:"✓"}
+.footer{padding:56px 26px;text-align:center;border-top:1px solid var(--line);margin-top:20px}
+.footer .big{font-size:30px;font-weight:800;letter-spacing:-1px;max-width:18ch;margin:0 auto 6px;line-height:1.1}
+.footer .big b{color:var(--accent)}
+.footer small{color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-size:11px}
+
+@media(max-width:760px){
+  .hero h1{font-size:38px}.flow-home,.nav-cards,.pair,.stat-row{grid-template-columns:1fr 1fr}
+  .fmt{grid-template-columns:1fr}.fmt .thumb{max-width:200px}
+  .schip{flex-wrap:wrap}.schip .em{min-width:auto}
+}
+@media(max-width:480px){.flow-home,.nav-cards,.stat-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">Central <span class="b">Bobags</span><small>Estratégia de Social</small></div>
+  <button data-view="home" class="active">Início</button>
+  <button data-view="fluxo">Como produzir</button>
+  <button data-view="formatos">Formatos</button>
+  <button data-view="semana">A semana</button>
+  <button data-view="checklist">Checklist</button>
+  <button data-view="analise">A análise</button>
+  <button data-view="guia">Guia completo</button>
+</nav>
+
+<!-- HOME -->
+<div class="view active" id="home">
+  <div class="hero">
+    <div class="eyebrow">Guia de conteúdo · Bobags</div>
+    <h1>Conteúdo que <em>conecta</em>, planejado antes.</h1>
+    <div class="sub">O que funciona no nosso Instagram, como produzir com folga, e onde pegar cada coisa.</div>
+  </div>
+  <div class="goldrule"><div class="inner">
+    <div><div class="k">Antes de tudo, a pergunta</div><div class="q">"Como isso vai <b>ativar a nossa comunidade?</b>"</div></div>
+  </div></div>
+  <div class="wrap" style="padding-top:40px">
+    <div class="snum">O ciclo</div>
+    <h2>Nunca no susto</h2>
+    <p class="lead">A gente não produz no dia de postar. Prepara com antecedência — sobra tempo pra caprichar, revisar e reagir ao que surgir.</p>
+    <div class="flow-home">
+      <div class="fh"><div class="n">01</div><div><h4>Planejar</h4><p>Pautas da próxima semana a partir da grade + eventos.</p></div></div>
+      <div class="fh"><div class="n">02</div><div><h4>Produzir em lote</h4><p>Arte, legenda e stories de vários dias de uma vez.</p></div></div>
+      <div class="fh"><div class="n">03</div><div><h4>Revisar</h4><p>Cada peça tem a nossa cara e o CTA certo?</p></div></div>
+      <div class="fh"><div class="n">04</div><div><h4>Agendar</h4><p>Programar tudo. No dia, só acompanhar.</p></div></div>
+    </div>
+    <div class="nav-cards">
+      <div class="nc" data-go="semana"><div><h3>A semana</h3><p>A grade completa, com exemplo e stories de cada dia.</p></div><a class="arrow">→</a></div>
+      <div class="nc" data-go="checklist"><div><h3>Checklist ✓</h3><p>Executando a semana? Marque cada etapa até postar.</p></div><a class="arrow">→</a></div>
+      <div class="nc" data-go="fluxo"><div><h3>Como produzir</h3><p>O passo a passo da preparação antecipada.</p></div><a class="arrow">→</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- FLUXO -->
+<div class="view" id="fluxo">
+  <div class="wrap">
+    <div class="snum">O ciclo de produção</div>
+    <h2>Como produzir com antecedência</h2>
+    <p class="lead">O objetivo é chegar no dia de postar com tudo pronto e agendado. O trabalho acontece antes.</p>
+    <h3>1 · Planejar a semana</h3>
+    <p>Abra <b><a href="#" class="xlink" data-go="semana" style="color:var(--accent)">A semana ↗</a></b> pra ver a grade e cruze com os eventos do período (ski, MET, estreias, Copa...). Defina o <b>tema</b> de cada dia — o assunto que amarra o par manhã + noite.</p>
+    <h3>2 · Produzir em lote</h3>
+    <p>Com os temas definidos, produza vários dias de uma vez. Pra cada dia: duplique a <b>arte no Canva</b>, escreva a legenda, separe os <b>stories</b> nas pastas. Em lote mantém consistência e economiza tempo.</p>
+    <div class="callout"><b>Regra de ouro:</b> cada peça nasce com prazo. O engajamento e a conversão da semana ficam prontos com dias de folga — nunca na véspera.</div>
+    <h3>3 · Revisar com a nossa lente</h3>
+    <p>Antes de agendar: tem a nossa voz (humana, opinativa, humor culto)? A noite converte de verdade (nome + marca + preço)? Não tem cara de robô?</p>
+    <h3>4 · Agendar e acompanhar</h3>
+    <p>Programe tudo. No dia, o trabalho é leve: acompanhar stories, responder a comunidade e ficar de olho na <b>Oportunidade</b>.</p>
+    <div class="callout"><b>Oportunidade (o inesperado):</b> o plano é a base, não a prisão. Surgiu algo quente (celeb com peça do acervo, notícia forte)? Sobe em 24–48h e o plano escorrega — se passar no filtro "ativa a comunidade E tem a nossa cara?".</div>
+  </div>
+</div>
+
+<!-- FORMATOS -->
+<div class="view" id="formatos">
+  <div class="wrap">
+    <div class="snum">O que funciona</div>
+    <h2>Os 5 formatos</h2>
+    <p class="lead">Cada um tem um trabalho. Trabalhamos com o visual — então olhe o exemplo de verdade, clicando.</p>
+    <div id="formatos-list"></div>
+  </div>
+</div>
+
+<!-- SEMANA -->
+<div class="view" id="semana">
+  <div class="wrap">
+    <div class="snum">A grade da semana</div>
+    <h2>O que postar em cada dia</h2>
+    <p class="lead">Escolha o dia. Cada um tem o par (manhã atrai + noite converte) com exemplo visual, e a sequência de stories. É o mapa pra planejar — não pra produzir no susto.</p>
+    <div class="callout" id="acervo-callout">📂 <b>Pasta-mãe de conteúdo:</b> nossos melhores conteúdos + histórico da Bobags. Sempre explore pra achar material — e alimente com o novo (foto incrível, vídeo de influ) na subpasta certa (influ / ski / produto...). <a id="acervo-link" href="#" target="_blank" style="color:var(--accent);font-weight:600">abrir pasta selecionados →</a></div>
+    <div class="daybar" id="daybar"></div>
+    <div id="daypanels"></div>
+    <div class="divider"></div>
+    <div class="snum">Presença garantida</div>
+    <h3 style="margin-top:6px">Toda semana precisa ter</h3>
+    <p>Bolsas (seg, qui) · Ski (qua, dom) · Assinatura (ter) · Entrega expressa SP (sex + sáb cedo) · Agendamento showroom 3× (ter, qui, sáb).</p>
+    <div class="divider"></div>
+    <div class="snum">Ponto de atenção</div>
+    <h2>Como guiar a busca</h2>
+    <h3>Achar a comparação de celebridade</h3>
+    <div class="flow">
+      <div class="fstep"><div class="n"></div><div class="tx"><b>Look da semana</b> — celeb em evento recente</div></div>
+      <div class="fstep"><div class="n"></div><div class="tx"><b>Celeb em alta repetindo look antigo</b> — Kate, Cate & cia</div></div>
+      <div class="fstep"><div class="n"></div><div class="tx"><b>Dois momentos da mesma celeb</b></div></div>
+      <div class="fstep last"><div class="n"></div><div class="tx"><b>Celeb × celeb, mesmo look</b> (arquivo), com gancho de atualidade</div></div>
+    </div>
+    <h3>Achar o par no acervo (conversão)</h3>
+    <div class="flow">
+      <div class="fstep"><div class="n"></div><div class="tx"><b>Peça parecida no acervo</b></div></div>
+      <div class="fstep"><div class="n"></div><div class="tx"><b>Outro look da mesma celeb</b> que temos</div></div>
+      <div class="fstep"><div class="n"></div><div class="tx"><b>Mesma categoria/vibe</b> — "não temos ESSE, mas temos o de gala pro seu evento"</div></div>
+      <div class="fstep last"><div class="n"></div><div class="tx"><b>Não force</b> — se nada conecta, fica só como alcance</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ANÁLISE -->
+<div class="view" id="analise">
+  <div class="wrap">
+    <div class="snum">Por que isso funciona</div>
+    <h2>A análise</h2>
+    <p class="lead">Lemos os 47 melhores posts de 20 meses — card a card, frame a frame. Isto é o que os dados provaram, e é a base de toda a estratégia.</p>
+
+    <div class="stat-row">
+      <div class="statbig"><div class="b">47</div><div class="l">melhores posts analisados</div></div>
+      <div class="statbig"><div class="b">969 mil</div><div class="l">maior alcance (1 post)</div></div>
+      <div class="statbig"><div class="b">60,7 mil</div><div class="l">maior nº de compartilhamentos</div></div>
+      <div class="statbig"><div class="b">20</div><div class="l">meses de histórico</div></div>
+    </div>
+
+    <h3>Os maiores alcances — o que deu certo</h3>
+    <div class="analise-cards">
+      <a class="acard" href="https://www.instagram.com/p/DMLFDQNxQ9N/" target="_blank"><img src="img/DMLFDQNxQ9N.jpg"><div class="c"><div class="t">A História · Carolyn</div><div class="v">969 mil</div></div></a>
+      <a class="acard" href="https://www.instagram.com/p/DH32-3Sx5Ba/" target="_blank"><img src="img/DH32-3Sx5Ba.jpg"><div class="c"><div class="t">Marca a Amiga · Friends</div><div class="v">947 mil</div></div></a>
+      <a class="acard" href="https://www.instagram.com/p/DVtdFJtkVTL/" target="_blank"><img src="img/DVtdFJtkVTL.jpg"><div class="c"><div class="t">Lado a Lado · Kate</div><div class="v">922 mil</div></div></a>
+      <a class="acard" href="https://www.instagram.com/p/DTJQJqtEY79/" target="_blank"><img src="img/DTJQJqtEY79.jpg"><div class="c"><div class="t">Marca a Amiga · velhinhas</div><div class="v">581 mil</div></div></a>
+      <a class="acard" href="https://www.instagram.com/p/DXo5dMfEeYE/" target="_blank"><img src="img/DXo5dMfEeYE.jpg"><div class="c"><div class="t">Meme · Diabo Veste Prada</div><div class="v">375 mil</div></div></a>
+      <a class="acard" href="https://www.instagram.com/p/DYvTXj1kWkK/" target="_blank"><img src="img/DYvTXj1kWkK.jpg"><div class="c"><div class="t">O Truque · lenço</div><div class="v">179 mil</div></div></a>
+    </div>
+
+    <h3>O que aprendemos — as 4 verdades</h3>
+    <div class="insight"><div class="ico">1</div><div><h4>Comparação de celeb + meme puxam o ALCANCE</h4><p>Os maiores números vêm de lado-a-lado de celeb ("repetir grife é chique") e meme com convite social ("marca a amiga"). São os motores de gente nova chegando — mas o meme viraliza porque tem o convite; a comparação tem alcance mas menos compartilhamento.</p></div></div>
+    <div class="insight"><div class="ico">2</div><div><h4>História e dica de produto são SALVAS</h4><p>Editorial denso e dica de styling/cuidado não explodem em views, mas geram os maiores salvamentos — o público guarda pra decidir depois. É o meio do funil. Se preciso de decisão, faço isto; se preciso de alcance, faço meme.</p></div></div>
+    <div class="insight"><div class="ico">3</div><div><h4>O produto entra DEPOIS do gancho cultural</h4><p>Catálogo puro tem o menor engajamento de todos. A venda funciona quando vem atrás de uma isca cultural: a celeb encanta de manhã, a peça do acervo aparece à noite com nome + marca + preço.</p></div></div>
+    <div class="insight"><div class="ico">4</div><div><h4>A voz humana é o que SEMPRE funcionou</h4><p>Humor culto de moda e pop, opinião cultural, conversa real. Nada com cara de robô. Até o meme só funciona colado no nosso jeito de ver moda. Esse core não é bobeira — é o que faz o Instagram funcionar.</p></div></div>
+
+    <h3>Quem é o nosso público</h3>
+    <p>Não é só quem vive de luxo. Alugar dá <b>acesso</b>: a advogada que quer estar bem vestida em eventos de trabalho sem gastar numa bolsa só; a criadora que gira looks no trend sem comprar cada um; a família que não vai comprar look de ski pra viajar uma vez. Vendemos desejo <b>e</b> esperteza.</p>
+
+    <div class="callout">Esta é a leitura resumida. Pro guia completo — formatos em detalhe, personas, anatomia do post e a cola de parede — abra o <a href="#" class="xlink" data-go="guia" style="color:var(--accent);font-weight:600">Guia completo ↗</a></div>
+  </div>
+</div>
+
+<!-- GUIA COMPLETO (conteúdo exato do guideline, recolorido, via iframe) -->
+<div class="view" id="guia">
+  <iframe src="guia.html" style="width:100%;height:calc(100vh - 56px);border:none;display:block"></iframe>
+</div>
+
+<!-- CHECKLIST DE EXECUÇÃO -->
+<div class="view" id="checklist">
+  <div class="wrap">
+    <div class="snum">Execução da semana</div>
+    <h2>Checklist de produção</h2>
+    <p class="lead">Acompanhe cada post do planejamento à publicação. Marque conforme avança — fica salvo no seu navegador. O controle de aprovação continua no Trello.</p>
+    <div class="wkbar"><div class="wkbar-fill" id="wkfill"></div></div>
+    <div class="wkmeta"><span id="wkpct">0%</span> da semana concluído · <button id="wkreset" class="wkreset">resetar semana</button></div>
+    <div id="checklist-body"></div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="big">Não vendemos antes de existir para a <b>comunidade</b>.</div>
+  <small>Closet Bobags</small>
+</div>
+
+<script>
+/* ===== CONFIG — cole os links UMA vez. "" = "em breve". ===== */
+const CONFIG={
+  /* artes de feed no Canva por formato — links virão depois */
+  canva:{f1:"",f2:"",f3:"",f4:"",f5:""},
+  /* artes de LP prontas (+180) pra story de conversão */
+  canva_lp:"https://www.canva.com/design/DAF61bWdU9U/XTNcZJBjqTpjbXDFkvkrxA/edit",
+  /* pastas de conteúdo por tipo de story */
+  drive:{
+    espontaneo:"https://drive.google.com/drive/folders/18e4BTObY_xkIGouFq0rPJs5deeD49gId?usp=sharing",
+    flatlay:"https://drive.google.com/drive/folders/1dPJYsxKIaqBDb-ca1poV1766vl4cbp6z?usp=sharing",
+    depoimento:"https://drive.google.com/drive/folders/1Dea7b-7VrK4q5KJAPHyAwEEsv9_tahLC?usp=sharing",
+    agendamento:"https://drive.google.com/drive/folders/1-NGYT1_vVFz6VZa3bar9VcIxX0btE6Jb?usp=sharing",
+    entrega_sp:""
+  },
+  /* admin de depoimentos (texto + foto do produto) */
+  admin_depoimentos:"https://bobags.com.br/admin/testimonial/",
+  /* pasta-mãe: melhores conteúdos + histórico. SEMPRE explorar e alimentar */
+  drive_selecionados:"https://drive.google.com/drive/folders/1WGZEhJntP41BLiSkYGIMhagaFgimIHLG?usp=sharing",
+  /* planilha dos links parametrizados de LP (coluna E = URL completa) */
+  sheets:{lp:"https://docs.google.com/spreadsheets/d/1sEfsk7Oop7Zydv0NQTFXXFqFmqBdD8gQZChu2GFmURk/edit?gid=1320959685#gid=1320959685"},
+  dono_links:"a Marina"
+};
+
+const FORMATOS=[
+  {id:1,nome:"Lado a Lado",tagline:"Comparação de celebridade",obj:"Atrai · alcance",img:"img/DVtdFJtkVTL.jpg",
+   desc:"Duas fotos reais de celeb divididas ao meio. As datas em branco contam a história. Pouco texto, logo no rodapé.",
+   why:"Conecta celebridade + o nosso modelo: mostrar a mesma pessoa usando a MESMA peça mais de uma vez legitima repetir looks e reutilizar peças — que é exatamente o que o secondhand + aluguel permitem, seja você mesma, ou alugando o que foi usado por outra pessoa. O layout lado-a-lado já é comprovado (4 dos 5 maiores posts). E a força mora na LEGENDA, que amarra a mensagem à marca.",
+   copy:"O layout lado-a-lado + datas grandes (deixe as fotos falarem) E uma legenda que traduz a repetição em valor. Ex. do post da Kate: \"...são feitas para um único momento. Talvez o verdadeiro luxo seja exatamente isso — ter peças tão boas que você quer usar de novo. Acesse o nosso site através do link na bio e repita quantos looks quiser.\"",
+   stat:["922 mil","views · Kate, mesmo look"],url:"https://www.instagram.com/p/DVtdFJtkVTL/"},
+  {id:2,nome:"Marca a Amiga",tagline:"Meme relacionável",obj:"Espalha · compartilhamento",img:"img/DH32-3Sx5Ba.jpg",
+   desc:"Layout imitando o Twitter/X (o texto é a arte, não a legenda) ou etiquetas sobre uma cena. Humor culto de moda e pop.",
+   why:"É o mais compartilhado porque o público SE VÊ ali. O segredo é escolher uma cena/momento da cultura pop que esteja alinhado ao nosso público e trazê-lo pro nosso mundo — como no de Friends, onde qualquer uma se reconhece no 'cafézinho superfaturado'.",
+   copy:"1) Escolher a cena pop certa (alinhada ao público) e conectar ao mundo Bobags — a pessoa tem que se ver ali. 2) O convite social na arte ('marca a amiga', 'você é qual?') + CTA forte.",
+   stat:["60,7 mil","compart. · Friends"],url:"https://www.instagram.com/p/DH32-3Sx5Ba/"},
+  {id:3,nome:"A História",tagline:"Editorial em carrossel",obj:"Alcance + engajamento + salvamento",img:"img/DMLFDQNxQ9N.jpg",
+   desc:"Mini-documentário em cards: gancho → personagens → tese cultural → pergunta. O formato mais editorial, quase notícia.",
+   why:"Gera muito alcance E engajamento porque entrega informação valiosa pra um público que QUER saber desses temas. Tema bem escolhido = certeiro. E prova que a marca sabe muito do mundo ao redor dela e TEM opinião — não é post superficial.",
+   copy:"Um tema certeiro pro nosso público + o arco de história + a nossa opinião cultural marcada. Termina com pergunta. Profundidade, nunca superficial.",
+   stat:["4,1 mil","salvos · Carolyn"],url:"https://www.instagram.com/p/DMLFDQNxQ9N/"},
+  {id:4,nome:"O Truque",tagline:"Dica de styling e cuidado",obj:"Autoridade · salvamento",img:"img/DYvTXj1kWkK.jpg",
+   desc:"Gancho → dicas card a card (como usar, combinar, cuidar) → veredito → peça real. Styling geral + ski e bolsas.",
+   why:"Gera salvamento porque é conteúdo útil de verdade — a pessoa guarda pra usar depois. E prova que a gente DOMINA o produto: quem ensina a cuidar, combinar e reconhecer uma peça de luxo é autoridade, não vitrine. Constrói a confiança que sustenta o aluguel de segunda mão.",
+   copy:"A dica prática e específica (nunca óbvia). Cada card resolve uma dúvida real de quem usa a peça.",stat:["990","salvos · lenço"],url:"https://www.instagram.com/p/DYvTXj1kWkK/"},
+  {id:5,nome:"No Acervo",tagline:"Do look à peça alugável",obj:"Vende · conversão",img:"img/DQ7BK04Eazm.jpg",
+   desc:"O look que encantou de manhã, agora no acervo: nome + marca + preço real, ou Comprar × Alugar. Onde a venda acontece.",
+   why:"É o fim do funil: o gancho cultural da manhã trouxe o desejo, aqui a gente aterrissa na peça real e alugável. Funciona quando NÃO é catálogo frio — vem sempre atrelado ao que encantou antes, com nome + marca + preço e um CTA que tira a fricção (link, entrega, agendamento).",
+   copy:"Nome + marca + preço REAL (nunca 'uma bolsa bonita') + CTA que tira a fricção. Sempre conectado ao gancho da manhã.",stat:["Get-the-look","de ski das celebs"],url:"https://www.instagram.com/p/DQ7BK04Eazm/"}
+];
+const FNAME={},FTAG={};FORMATOS.forEach(f=>{FNAME[f.id]=f.nome;FTAG[f.id]=f.tagline});
+const FIMG={1:"img/DVtdFJtkVTL.jpg",2:"img/DH32-3Sx5Ba.jpg",3:"img/DMLFDQNxQ9N.jpg",4:"img/DYvTXj1kWkK.jpg",5:"img/DQ7BK04Eazm.jpg"};
+
+const STORYBRIEF={
+  espontaneo:{em:"🎬 Espontâneo",br:"1 vídeo cru de uma peça do acervo no tema do dia. Logo cedo.",
+    links:[["Abrir pasta de vídeos","vídeos espontâneos já selecionados — escolha um que caiba no tema",CONFIG.drive.espontaneo]]},
+  flatlay:{em:"🧺 Flat lay / enquete",br:"1 flat lay da peça + 1 enquete ('qual você levaria?').",
+    links:[["Abrir pasta flat lay","fotos de flat lay prontas pra usar",CONFIG.drive.flatlay]]},
+  depoimento:{em:"💬 Depoimento / lista",br:"1 depoimento (texto + foto do produto) ou divulgação da lista de transmissão.",
+    links:[["Admin de depoimentos","pega o texto do depoimento + foto do produto",CONFIG.admin_depoimentos],["Pasta selecionados","depoimentos já prontos em vídeo/print",CONFIG.drive.depoimento]]},
+  agendamento:{em:"📍 Agendamento",br:"1 story chamando pra agendar visita ao showroom.",
+    links:[["Abrir pasta do showroom","fotos e vídeos bons do showroom pra reutilizar",CONFIG.drive.agendamento]]},
+  entrega_sp:{em:"🚚 Entrega SP",br:"1 story de entrega expressa pra SP (sábado cedo obrigatório).",
+    links:[["Pasta selecionados","material geral pra montar o story de entrega",CONFIG.drive_selecionados]]},
+  lp:{em:"🔗 LP do dia",br:"1 fotão com CTA pra LP. Arte no Canva (+180 prontas) + link parametrizado na planilha.",
+    links:[["Artes de LP (Canva)","+180 artes prontas — duplique e adapte, pode repetir",CONFIG.canva_lp],["Link parametrizado (Sheets)","coluna E = URL completa. Linha nova? copie e altere A e D",CONFIG.sheets.lp]]}
+};
+
+/* cada dia usa exemplo DISTINTO (exM/exN = {img,url}); nunca repetir o mesmo post em dias diferentes */
+const EX={
+  kate:{img:"img/DVtdFJtkVTL.jpg",url:"https://www.instagram.com/p/DVtdFJtkVTL/"},
+  celebsMesmoLook:{img:"img/DV_kh75EX58.jpg",url:"https://www.instagram.com/p/DV_kh75EX58/"},
+  cate:{img:"img/DWUD3UjkT4B.jpg",url:"https://www.instagram.com/p/DWUD3UjkT4B/"},
+  satcPassarela:{img:"img/DYH0GsgkbPR.jpg",url:"https://www.instagram.com/p/DYH0GsgkbPR/"},
+  tweetCinderela:{img:"img/DFVR61Vu2UO.jpg",url:"https://www.instagram.com/p/DFVR61Vu2UO/"},
+  velhinhas:{img:"img/DTJQJqtEY79.jpg",url:"https://www.instagram.com/p/DTJQJqtEY79/"},
+  carolyn:{img:"img/DMLFDQNxQ9N.jpg",url:"https://www.instagram.com/p/DMLFDQNxQ9N/"},
+  nana:{img:"img/DOES5cqkQCG.jpg",url:"https://www.instagram.com/p/DOES5cqkQCG/"},
+  estilista9:{img:"img/DYsBAwPkXw_.jpg",url:"https://www.instagram.com/p/DYsBAwPkXw_/"},
+  lenco:{img:"img/DYvTXj1kWkK.jpg",url:"https://www.instagram.com/p/DYvTXj1kWkK/"},
+  bandage:{img:"img/DLav72GPPBA.jpg",url:"https://www.instagram.com/p/DLav72GPPBA/"},
+  hailey:{img:"img/DZhueBljL-C.jpg",url:"https://www.instagram.com/p/DZhueBljL-C/"},
+  getlookSki:{img:"img/DQ7BK04Eazm.jpg",url:"https://www.instagram.com/p/DQ7BK04Eazm/"},
+  comprarAlugar:{img:"img/DU9JR6nkbOJ.jpg",url:"https://www.instagram.com/p/DU9JR6nkbOJ/"},
+  kendallGetlook:{img:"img/DdfFnp1Ecm_.jpg",url:"https://www.instagram.com/p/DdfFnp1Ecm_/"},
+  compilado:{img:"img/DcuFreHxFpt.jpg",url:"https://www.instagram.com/p/DcuFreHxFpt/"},
+  assinatura:{img:"",url:""}
+};
+/* NOTA: os exemplos abaixo são ILUSTRATIVOS do FORMATO — ainda não estão conectados no mesmo
+   tema (isso é o próximo passo). A regra real: manhã e noite do MESMO dia falam do MESMO assunto. */
+/* REGRA: manhã ATRAI (alcance), noite CONVERTE — SEMPRE. Editorial e dica são ALCANCE (vão de manhã).
+   A conversão VARIA de mecânica (não repetir get-the-look todo dia):
+   get-the-look · Comprar×Alugar · peça em destaque/drop · prova/urgência · compilado (bom p/ impulsionar) · assinatura */
+const DIAS=[
+  {d:"Seg",tema:"Look de celeb da semana",mkt:"Bolsas",manha:1,exM:EX.kate,
+   noite:{mec:"Get-the-look",txt:"A bolsa parecida no acervo — nome+marca+preço"},exN:EX.getlookSki,stories:["espontaneo","flatlay","depoimento","lp"]},
+  {d:"Ter",tema:"Dor / desejo do público",mkt:"Assinatura",manha:2,exM:EX.tweetCinderela,
+   noite:{mec:"Assinatura",txt:"A Assinatura resolve a dor da manhã — 'um mês na Assinatura': os vários looks que renderam + math de valor. NÃO é Comprar×Alugar (isso é peça avulsa); aqui é o acervo rotativo recorrente."},exN:EX.assinatura,stories:["espontaneo","flatlay","agendamento","lp"]},
+  {d:"Qua",tema:"Ski",mkt:"Ski",manha:4,exM:EX.lenco,
+   noite:{mec:"Comprar × Alugar",txt:"Preço da MESMA peça: comprar vs alugar. Choque de economia."},exN:EX.comprarAlugar,stories:["flatlay","depoimento","lp"]},
+  {d:"Qui",tema:"Celeb em alta",mkt:"Bolsas",manha:1,exM:EX.cate,
+   noite:{mec:"Get-the-look",txt:"Falou da Kendall de manhã? Ache itens similares no acervo e monte o get-the-look à noite."},exN:EX.kendallGetlook,stories:["espontaneo","depoimento","agendamento","lp"]},
+  {d:"Sex",tema:"Ícone / pop culture",mkt:"Entrega SP",manha:3,exM:EX.estilista9,
+   noite:{mec:"Prova / urgência",txt:"Look pro fim de semana + entrega expressa SP (sexta dá tempo). 'Reserve pro seu evento' / última disponível."},exN:EX.getlookSki,stories:["espontaneo","flatlay","entrega_sp","lp"]},
+  {d:"Sáb",tema:"Lifestyle",mkt:"",manha:4,exM:EX.lenco,
+   noite:{mec:"Peça em destaque",txt:"Uma peça-herói do acervo em destaque — 'chegou no acervo' / it-bag do momento."},exN:EX.comprarAlugar,stories:["entrega_sp","depoimento","agendamento","lp"]},
+  {d:"Dom",tema:"Cultural / inspiração",mkt:"",manha:3,exM:EX.nana,
+   noite:{mec:"Compilado",txt:"Compilado de peças por marca/categoria (várias peças especiais). Orgânico rende menos, mas ótimo pra impulsionar."},exN:EX.compilado,stories:["espontaneo","flatlay","lp"]}
+];
+
+function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===v));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===v));window.scrollTo({top:0,behavior:'smooth'});}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.view));
+document.querySelectorAll('[data-go]').forEach(c=>c.onclick=(e)=>{e.preventDefault();show(c.dataset.go);});
+
+function toolLink(url,cls,label){return url?`<a class="act ${cls}" href="${url}" target="_blank">${label}</a>`:`<span class="act todo" title="ainda não disponível — pedir a ${CONFIG.dono_links}">${label} · em breve</span>`;}
+
+/* Formatos */
+document.getElementById('formatos-list').innerHTML=FORMATOS.map(f=>`
+  <div class="fmt">
+    <a class="thumb" href="${f.url}" target="_blank"><img src="${f.img}"><div class="play">▶ ver post</div></a>
+    <div class="info">
+      <div class="tagline">${f.tagline}</div>
+      <div class="htitle"><h3>${f.nome}</h3><span class="obj">${f.obj}</span></div>
+      <div class="desc">${f.desc}</div>
+      ${f.why?`<div class="why"><b>Por que funciona pra gente:</b> ${f.why}</div>`:''}
+      <div class="copy"><b>O que copiar:</b> ${f.copy}</div>
+      <div class="foot"><div class="stat"><b>${f.stat[0]}</b> <span>${f.stat[1]}</span></div><a class="arrow" href="${f.url}" target="_blank">→</a></div>
+    </div>
+  </div>`).join('');
+
+/* Semana — calendário visual com exemplo + stories */
+const daybar=document.getElementById('daybar'),panels=document.getElementById('daypanels');
+function selDay(i){document.querySelectorAll('.daybtn').forEach((y,j)=>y.classList.toggle('active',j===i));
+  document.querySelectorAll('.daypanel').forEach((y,j)=>y.classList.toggle('active',j===i));}
+DIAS.forEach((x,i)=>{const b=document.createElement('button');b.className='daybtn'+(i===0?' active':'');b.innerHTML=`${x.d}${x.mkt?` <span class="dbmk">${x.mkt}</span>`:''}`;b.onclick=()=>selDay(i);daybar.appendChild(b);});
+panels.innerHTML=DIAS.map((x,i)=>{
+  const fm=FORMATOS.find(f=>f.id===x.manha);
+  const canvaM=CONFIG.canva['f'+x.manha],canvaN=CONFIG.canva.f5;
+  const storiesHTML=x.stories.map(sk=>{const s=STORYBRIEF[sk];if(!s)return'';
+    const links=(s.links||[]).map(([lab,hint,url])=>url
+      ?`<a class="slink" href="${url}" target="_blank"><span class="ll">${lab}</span><span class="lh">${hint}</span></a>`
+      :`<span class="slink todo"><span class="ll">${lab} · em breve</span><span class="lh">${hint}</span></span>`).join('');
+    return `<div class="schip"><div class="stop"><span class="em">${s.em}</span><span class="br">${s.br}</span></div><div class="slinks">${links}</div></div>`;}).join('');
+  return `<div class="daypanel${i===0?' active':''}" id="dp${i}">
+    <div class="dtheme"><span class="dlabel">Tema do dia</span><span class="tag">${x.tema}</span></div>
+    <div class="connect-rule">🔗 <b>Manhã e noite falam do MESMO tema do dia.</b> A manhã atrai com o assunto; a noite converte com o mesmo assunto ("você viu de manhã, agora pode usar"). Os thumbs são exemplos do <b>formato/mecânica</b> — o tema real você define no planejamento.</div>
+    <div class="pair">
+      <div class="pcard m">
+        <div class="head"><span class="tt">☀️ Manhã · atrai</span></div>
+        <a class="thumb" href="${x.exM.url}" target="_blank"><span class="exbadge">exemplo do formato</span><img src="${x.exM.img}"></a>
+        <div class="bd">
+          <div class="fmtname">${fm.nome}<small>${fm.tagline}</small></div>
+          <div class="txt">${fm.desc}</div>
+          <div class="acts"><a class="act ghost" href="${x.exM.url}" target="_blank">▶ ver exemplo</a>${toolLink(canvaM,'primary','🎨 duplicar arte')}</div>
+        </div>
+      </div>
+      <div class="pcard n">
+        <div class="head"><span class="tt">🌙 Noite · converte</span><span class="mecpill">${x.noite.mec}</span></div>
+        ${x.exN.img?`<a class="thumb" href="${x.exN.url}" target="_blank"><span class="exbadge">exemplo</span><img src="${x.exN.img}"></a>`:`<div class="thumb noex">exemplo a produzir<br><small>(formato novo — sem post de referência ainda)</small></div>`}
+        <div class="bd">
+          <div class="fmtname">No Acervo<small>mecânica: ${x.noite.mec}</small></div>
+          <div class="txt">${x.noite.txt}</div>
+          <div class="connect">↳ mesmo tema da manhã: "você viu, agora pode usar"</div>
+          <div class="acts">${x.exN.url?`<a class="act ghost" href="${x.exN.url}" target="_blank">▶ ver exemplo</a>`:''}${toolLink(canvaN,'primary','🎨 duplicar arte')}</div>
+        </div>
+      </div>
+    </div>
+    <div class="stories">
+      <div class="l">📱 Stories do dia</div>
+      <div class="sub">O que gravar e onde pegar — puxe da pasta e suba conforme o tema.</div>
+      <div class="srow">${storiesHTML}</div>
+    </div>
+  </div>`;}).join('');
+
+/* ===== CHECKLIST (localStorage) ===== */
+const CKSTEPS=[["tema","Tema definido"],["arte","Arte feita"],["legenda","Legenda escrita"],["trello","Subiu no Trello"],["aprovado","Aprovado"],["postado","Postado"]];
+const CKKEY="bobags_checklist_v1";
+let CK=JSON.parse(localStorage.getItem(CKKEY)||"{}");
+function ckSave(){localStorage.setItem(CKKEY,JSON.stringify(CK));}
+function ckId(di,slot,step){return `d${di}_${slot}_${step}`;}
+function ckToggle(id){CK[id]=!CK[id];ckSave();ckRender();}
+function ckReset(){if(confirm("Resetar todo o progresso da semana?")){CK={};ckSave();ckRender();}}
+function ckRenderSteps(di,slot){
+  return CKSTEPS.map(([k,lab])=>{const id=ckId(di,slot,k);const on=CK[id];
+    return `<div class="ckstep${on?' checked':''}" onclick="ckToggle('${id}')"><span class="box"></span>${lab}</div>`;}).join('');
+}
+function ckRender(){
+  // total = por dia: 6 (manhã) + 6 (noite) + nº de stories do dia
+  const total=DIAS.reduce((a,x)=>a+CKSTEPS.length*2+x.stories.length,0);let done=0;
+  const body=DIAS.map((x,i)=>{
+    const mDone=CKSTEPS.filter(([k])=>CK[ckId(i,'m',k)]).length;
+    const nDone=CKSTEPS.filter(([k])=>CK[ckId(i,'n',k)]).length;
+    const stDone=x.stories.filter(sk=>CK[ckId(i,'st',sk)]).length;
+    done+=mDone+nDone+stDone;
+    const dayTotal=CKSTEPS.length*2+x.stories.length, dayDone=mDone+nDone+stDone;
+    const isDone=dayDone===dayTotal;
+    const open=(i===0);
+    const storiesSteps=x.stories.map(sk=>{const s=STORYBRIEF[sk];if(!s)return'';const id=ckId(i,'st',sk);const on=CK[id];
+      return `<div class="ckstep${on?' checked':''}" onclick="ckToggle('${id}')"><span class="box"></span>${s.em.replace(/^[^ ]+ /,'')}</div>`;}).join('');
+    return `<div class="ckday${isDone?' done':''}${open?' open':''}" id="ck${i}">
+      <div class="ckday-h" onclick="document.getElementById('ck${i}').classList.toggle('open')">
+        <span class="d">${x.d}</span><span class="th">${x.tema}${x.mkt?' · '+x.mkt:''}</span>
+        <span class="prog">${dayDone}/${dayTotal}${isDone?' ✓':''}</span>
+      </div>
+      <div class="ckday-body">
+        <div class="ckslot"><div class="st">☀️ Manhã · ${FNAME[x.manha]} (atrai)</div><div class="cksteps">${ckRenderSteps(i,'m')}</div></div>
+        <div class="ckslot"><div class="st n">🌙 Noite · ${x.noite.mec} (converte)</div><div class="cksteps">${ckRenderSteps(i,'n')}</div></div>
+        <div class="ckslot"><div class="st">📱 Stories do dia (postados)</div><div class="cksteps">${storiesSteps}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('checklist-body').innerHTML=body;
+  const pct=Math.round(done/total*100);
+  document.getElementById('wkfill').style.width=pct+'%';
+  document.getElementById('wkpct').textContent=pct+'%';
+}
+document.getElementById('wkreset').onclick=ckReset;
+ckRender();
+
+/* liga a pasta-mãe */
+if(CONFIG.drive_selecionados){document.getElementById('acervo-link').href=CONFIG.drive_selecionados;}
+
+const faltam=Object.values(CONFIG.canva).filter(v=>!v).length;
+if(faltam>0){const w=document.createElement('div');w.className='config-warn';
+  w.innerHTML=`⚙️ <b>Faltam as ${faltam} artes de feed no Canva</b> (uma por formato). A Marina traz depois — os botões "duplicar arte" viram links quando chegarem. Stories, LP e pastas já estão conectados.`;
+  document.querySelector('#semana .wrap').insertBefore(w,document.getElementById('acervo-callout'));}
+</script>
+</body>
+</html>
